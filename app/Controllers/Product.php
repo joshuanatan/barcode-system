@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ProductModel;
 use App\Libraries\RequestCheck;
+use App\Models\ProductLogModel;
 use CodeIgniter\Files\File;
 use Exception;
 
@@ -15,7 +16,7 @@ class Product extends BaseController
 
     public function __construct()
     {
-        
+
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: *');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -160,11 +161,10 @@ class Product extends BaseController
         $result = $productModel->dt_handle($get_data);
 
         foreach ($result["data"] as &$a) {
-            try{
+            try {
                 $pngBinaryData = file_get_contents($a["product_image"]);
                 $file = new File($a["product_image"]);
-            }
-            catch(Exception $e){
+            } catch (Exception $e) {
                 $default_path = WRITEPATH . 'uploads/default.png';
                 $pngBinaryData = file_get_contents($default_path);
                 $file = new File($default_path);
@@ -229,10 +229,46 @@ class Product extends BaseController
         }
         echo json_encode($response);
     }
-    public function product_in(){
+    public function product_in()
+    {
         return view('product_log/product_in');
     }
-    public function product_out(){
+    public function product_out()
+    {
         return view('product_log/product_out');
+    }
+    public function logs($product_id){
+        if (!$this->RequestCheck->isUser()) {
+            $msgSession = array(
+                "status" => false,
+                "msg" => "Session expired, please login"
+            );
+            session()->setFlashdata($msgSession);
+            return redirect()->to(base_url() . "login");
+        }
+        return view('product_log/product_log_content', array("product_id" => $product_id));
+    }
+    public function get_log($product_id){
+        if (!$this->RequestCheck->isUser()) {
+            $msgSession = array(
+                "status" => false,
+                "msg" => "Session expired, please login"
+            );
+            echo json_encode($msgSession);
+            return;
+        }
+
+        $get_data = $this->request->getGet();
+
+        $productLogModel = new ProductLogModel();
+        $result = $productLogModel->dt_handle($get_data, $product_id);
+
+        $response = array(
+            "draw" => $get_data["draw"],
+            "recordsTotal" => $productLogModel->count_all_data($product_id)[0]["count"],
+            "recordsFiltered" => $productLogModel->count_all_data($product_id)[0]["count"],
+            "data" => $result["data"]
+        );
+        echo json_encode($response);
     }
 }
