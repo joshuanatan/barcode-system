@@ -11,7 +11,6 @@
   <title>Barcode System</title>
 
   <link rel="apple-touch-icon" href="<?= base_url(); ?>assets/images/apple-touch-icon.png">
-  <link rel="shortcut icon" href="<?= base_url(); ?>assets/images/favicon.ico">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="<?= base_url(); ?>assets/global/css/bootstrap.min.css">

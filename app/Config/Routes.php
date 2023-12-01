@@ -46,6 +46,8 @@ $routes->post("/product/update", 'Product::update');
 $routes->get("/product/delete/(:num)", 'Product::delete/$1');
 $routes->get("/product/log/(:num)", 'Product::logs/$1');
 $routes->get("/product/log/data/(:num)", 'Product::get_log/$1');
+$routes->get("/product/log/delete/(:num)/(:num)", 'Product::delete_log/$1/$2');
+$routes->get("/product/log/export/(:num)", 'Product::export_log_excel/$1');
 $routes->get("/product/data", 'Product::data_datatable');
 $routes->get("/product/data_dropdown", 'Product::data_select2');
 $routes->get("/product/product_in", 'Product::product_in');

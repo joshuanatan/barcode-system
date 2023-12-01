@@ -11,7 +11,7 @@ class ProductLogModel extends Model
     protected $primaryKey       = 'id_pk_product_log';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ["product_id","product_log_type","created_at", "created_by"];
 
@@ -41,6 +41,7 @@ class ProductLogModel extends Model
 
 
     protected $selectField = array(
+        "id_pk_product_log",
         "product_id",
         "product_log_type",
         "created_at",
@@ -113,5 +114,15 @@ class ProductLogModel extends Model
         $sql = "select * from v_monthly_count_in";
         $db = db_connect();
         return $db->query($sql)->getResult("array");
+    }
+    public function get_detail_log($id_pk_product_log){
+        $sql = "select * from tbl_product_log where id_pk_product_log=:id_pk_product_log:";
+        $db = db_connect();
+        return $db->query($sql, array("id_pk_product_log" => $id_pk_product_log))->getResult("array");
+    }
+    public function get_log_last_month($product_id){
+        $sql = "select * from v_product_log_std WHERE created_at>= DATE_SUB(NOW(), INTERVAL 30 DAY) AND created_at <= NOW() and product_id = :product_id:";
+        $db = db_connect();
+        return $db->query($sql, array("product_id" => $product_id))->getResult("array");
     }
 }

@@ -40,6 +40,7 @@ Product
                 <th>Product Log Type</th>
                 <th>Execution Date</th>
                 <th>Execution By</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -56,12 +57,24 @@ Product
 <script>
   let tableData = [];
   var table;
+
+  const handleDeleteLog = (e) => {
+    let row = e.data.row
+  }
+
+  const postTableLoadActivities = () => {
+    tableData = table.rows().data().toArray()
+    $.each($(".deleteProductButton"), (index, value) => {
+      $(value).attr('id', `deleteProductButton${index}`);
+      $(value).attr("href", `/product/log/delete/${tableData[index]["id_pk_product_log"]}/${tableData[index]["product_id"]}`)  
+    })
+  }
   $(document).ready(() => {
     table = $("#productLogTable").DataTable({
       processing: true,
       serverSide: true,
       async: false,
-      ajax: '<?= base_url() ?>product/log/data/<?= $product_id ;?>',
+      ajax: '<?= base_url() ?>product/log/data/<?= $product_id; ?>',
       columns: [{
           data: 'product_id'
         },
@@ -74,7 +87,15 @@ Product
         {
           data: 'user_name'
         },
+        {
+          data: null,
+          className: '',
+          defaultContent: `
+                <a class="btn btn-sm btn-danger deleteProductButton col-lg-12">Delete</a>`,
+          orderable: false
+        }
       ],
+      "drawCallback": postTableLoadActivities,
       dom: 'Bfrtip'
     })
 

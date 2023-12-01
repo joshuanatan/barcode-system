@@ -112,6 +112,14 @@ Product
           window.location.href = `<?= base_url(); ?>product/log/${e.data.row}`
         })
       })
+      $.each($(".exportLogButton"), (index, value) => {
+        $(value).on("click", {
+          row: tableData[index]["product_id"]
+        }, e => {
+          // console.log(e.data)
+          window.location.href = `<?= base_url(); ?>product/log/export/${e.data.row}`
+        })
+      })
     }
     table = $("#productTable").DataTable({
       processing: true,
@@ -145,7 +153,9 @@ Product
           defaultContent: `
                 <button data-toggle="modal" data-target="#EditProductModal" class="btn btn-sm btn-primary editProductButton col-lg-12">Edit</button>
                 <button data-toggle="modal" data-target="#DeleteProductModal" class="btn btn-sm btn-danger deleteProductButton col-lg-12">Delete</button>
-                <button class = "btn btn-sm btn-dark col-lg-12 productLogButton">Log</button>`,
+                <button class = "btn btn-sm btn-dark col-lg-12 productLogButton">Log</button>
+                <a class = "btn btn-sm btn-light col-lg-12 exportLogButton">Export Log</a>
+                `,
           orderable: false
         }
       ],

@@ -237,7 +237,8 @@ class Product extends BaseController
     {
         return view('product_log/product_out');
     }
-    public function logs($product_id){
+    public function logs($product_id)
+    {
         if (!$this->RequestCheck->isUser()) {
             $msgSession = array(
                 "status" => false,
@@ -248,7 +249,8 @@ class Product extends BaseController
         }
         return view('product_log/product_log_content', array("product_id" => $product_id));
     }
-    public function get_log($product_id){
+    public function get_log($product_id)
+    {
         if (!$this->RequestCheck->isUser()) {
             $msgSession = array(
                 "status" => false,
@@ -270,5 +272,52 @@ class Product extends BaseController
             "data" => $result["data"]
         );
         echo json_encode($response);
+    }
+    public function delete_log($id_pk_product_log, $product_id)
+    {
+        if (!$this->RequestCheck->isAdmin()) {
+            $msgSession = array(
+                "status" => false,
+                "msg" => "Session expired, please login"
+            );
+            echo json_encode($msgSession);
+            return;
+        }
+
+        $productLogModel = new ProductLogModel();
+        $data = $productLogModel->get_detail_log($id_pk_product_log);
+
+        $productLogModel->delete($id_pk_product_log);
+
+        $productModel = new ProductModel();
+        $productModel->update_product_qty(- ($data[0]["product_log_type"]), $product_id);
+
+        return redirect()->to(base_url() . "product/log/" . $product_id);
+    }
+    public function export_log_excel($product_id)
+    {
+        if (!$this->RequestCheck->isUser()) {
+            $msgSession = array(
+                "status" => false,
+                "msg" => "Session expired, please login"
+            );
+            echo json_encode($msgSession);
+            return;
+        }
+
+        $productLogModel = new ProductLogModel();
+        $data = $productLogModel->get_log_last_month($product_id);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename="'.$product_id.'_exported_log_'.date("Ymdhis").'.csv"');
+        header('Cache-Control: max-age=0');
+
+        $fp = fopen('php://output', 'w');
+        fputcsv($fp,array("ID Log","Product ID", "Product Name", "Product Log Type","Createad At", "Created By"));
+        foreach ($data as $row) {
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
+        exit;
     }
 }
