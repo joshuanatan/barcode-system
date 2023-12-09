@@ -11,7 +11,7 @@ class ProductModel extends Model
     protected $primaryKey       = 'id_pk_product';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ["product_id", "product_name", "product_desc", "product_base_price", "product_sell_price", "product_image", "product_notes", "product_status", "product_qty", "created_by", "updated_by", "deleted_by"];
 
@@ -132,9 +132,9 @@ class ProductModel extends Model
             "amount" => count($result)
         );
     }
-    public function api($get_data=null)
+    public function api($get_data = null)
     {
-        $search_text = isset($get_data["search"])? $get_data["search"]:"";
+        $search_text = isset($get_data["search"]) ? $get_data["search"] : "";
         $db = db_connect();
         $builder = $db->table($this->table);
         $search_query = array();
@@ -157,15 +157,23 @@ class ProductModel extends Model
     }
 
     //insert log
-    public function update_product_qty($amt, $product_id){
-        $sql = "update mstr_product set product_qty = product_qty + ".$amt." where product_id=:product_id:";
+    public function update_product_qty($amt, $product_id)
+    {
+        $sql = "update mstr_product set product_qty = product_qty + " . $amt . " where product_id=:product_id:";
         $db = db_connect();
         $db->query($sql, array(
             "product_id" => $product_id,
         ));
     }
-    public function product_data($product_id){
+    public function product_data($product_id)
+    {
         $db = db_connect();
         return $db->query("select product_id, product_name, product_qty from mstr_product where product_id=:product_id:", array("product_id" => $product_id))->getResult("array");
+    }
+
+    public function delete_product($product_id){
+        $sql = "delete from mstr_product where product_id = :product_id:";
+        $db = db_connect();
+        $db->query($sql, array("product_id" => $product_id));
     }
 }

@@ -125,7 +125,7 @@ class Product extends BaseController
         $productModel->save($updateData);
         return redirect()->to(base_url() . "product");
     }
-    public function delete($id_pk_product)
+    public function delete($product_sku)
     {
         if (!$this->RequestCheck->isUser()) {
             $msgSession = array(
@@ -135,13 +135,12 @@ class Product extends BaseController
             session()->setFlashdata($msgSession);
             return redirect()->to(base_url() . "login");
         }
+        
+        $productLogModel = new ProductLogModel();
+        $productLogModel->delete_stock_log($product_sku);
+        
         $productModel = new ProductModel();
-        $updateData = array(
-            "id_pk_product" => $id_pk_product,
-            "deleted_by" => session("id_pk_user"),
-        );
-        $productModel->save($updateData);
-        $productModel->delete($id_pk_product);
+        $productModel->delete_product($product_sku);
         return redirect()->to(base_url() . "product");
     }
     public function data_datatable()

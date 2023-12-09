@@ -125,4 +125,11 @@ class ProductLogModel extends Model
         $db = db_connect();
         return $db->query($sql, array("product_id" => $product_id))->getResult("array");
     }
+    
+    //delete
+    public function delete_stock_log($product_id){
+        $sql = "delete from tbl_product_log where product_id = :product_id:";
+        $db = db_connect();
+        $db->query($sql, array("product_id" => $product_id));
+    }
 }

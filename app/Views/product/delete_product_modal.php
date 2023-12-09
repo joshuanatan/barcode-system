@@ -49,7 +49,7 @@
 <script>
   const loadDeleteContent = (e) => {
     let row = e.data.row;
-    $("#delete_button").attr("href", "/product/delete/" + tableData[row]["id_pk_product"])
+    $("#delete_button").attr("href", "/product/delete/" + tableData[row]["product_id"])
     $("#delete_product_id").html(tableData[row]["product_id"])
     $("#delete_product_name").html(tableData[row]["product_name"])
     $("#delete_product_description").html(tableData[row]["product_desc"])
