@@ -95,7 +95,6 @@ class Product extends BaseController
 
         $updateData = array(
             "id_pk_product" => htmlspecialchars($data["id_pk_product"]),
-            "product_id" => htmlspecialchars($data["product_id"]),
             "product_name" => htmlspecialchars($data["product_name"]),
             "product_desc" => htmlspecialchars($data["product_description"]),
             "product_base_price" => htmlspecialchars($data["product_base_price"]),

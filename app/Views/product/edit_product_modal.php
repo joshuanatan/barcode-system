@@ -13,7 +13,7 @@
           <div class="row">
             <div class="form-group col-md-12">
               <h5 class="form-control-label">Product ID</h5>
-              <input type="text" class="form-control" id="edit_product_id" name="product_id" value="" />
+              <input type="text" class="form-control" id="edit_product_id" name="product_id" value="" readonly/>
             </div>
             <div class="form-group col-md-12">
               <h5 class="form-control-label">Product Name</h5>
